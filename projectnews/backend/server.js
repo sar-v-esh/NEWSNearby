@@ -9,8 +9,31 @@ const port = process.env.PORT || 3001;
 const parser = new Parser();
 const allowedOrigins = [
     'http://localhost:3000', // For local frontend development
-    'https://news-nearby.vercel.app/' // EXAMPLE - REPLACE THIS LATER
+    'https://news-nearby.vercel.app/',
+    'https://news-nearby-sar-v-eshs-projects.vercel.app/',
+    'https://news-nearby-git-main-sar-v-eshs-projects.vercel.app/', // EXAMPLE - REPLACE THIS LATER
 ];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        // Log the incoming origin and what's allowed, for every request
+        console.log(`----------------------------------------------------------------`);
+        console.log(`CORS CHECK - Incoming Request Origin: ${origin}`);
+        console.log(`CORS CHECK - Allowed Origins: ${allowedOrigins.join(', ')}`);
+        
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            console.log(`CORS CHECK - Result: Origin ${origin} ALLOWED.`);
+            callback(null, true);
+        } else {
+            console.error(`CORS CHECK - Result: Origin ${origin} NOT ALLOWED.`);
+            callback(new Error('Not allowed by CORS')); // This is what's happening
+        }
+        console.log(`----------------------------------------------------------------`);
+    }
+};
+
+app.use(cors(corsOptions)); 
+
 app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
