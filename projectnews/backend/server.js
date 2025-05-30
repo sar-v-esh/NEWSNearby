@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 const parser = new Parser();
 const allowedOrigins = [
     'http://localhost:3000', // For local frontend development
-    // 'https://your-frontend-app-name.vercel.app' // EXAMPLE - REPLACE THIS LATER
+    'https://news-nearby.vercel.app/' // EXAMPLE - REPLACE THIS LATER
 ];
 app.use(cors({
     origin: function (origin, callback) {
