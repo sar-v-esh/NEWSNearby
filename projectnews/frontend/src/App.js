@@ -5,8 +5,7 @@ import Header from './components/Header';
 import CategoryFilters from './components/CategoryFilters';
 import NewsList from './components/NewsList';
 
-// In frontend/src/App.js or a config file
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api'; // MODIFIED
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3001/api'; 
 
 function App() {
   const [newsItems, setNewsItems] = useState([]);
@@ -17,14 +16,13 @@ function App() {
   const [currentFetchParams, setCurrentFetchParams] = useState(null);
 
   // States for controlled inputs
-  const [keywordSearchInput, setKeywordSearchInput] = useState(''); // For Header search
-  const [locationSearchInput, setLocationSearchInput] = useState(''); // For location search bar
+  const [keywordSearchInput, setKeywordSearchInput] = useState(''); 
+  const [locationSearchInput, setLocationSearchInput] = useState(''); 
 
   const fetchNews = useCallback(async (params) => {
     if (!params || Object.keys(params).length === 0) {
       console.log("FetchNews called with no params, skipping.");
-      // Potentially set an error or "no results" state if this happens unexpectedly
-      setLoading(false); // Ensure loading stops
+      setLoading(false); 
       return;
     }
     setLoading(true);
@@ -67,7 +65,7 @@ function App() {
         console.warn("Geolocation denied or unavailable:", geoError.message, "Falling back to IP.");
         setCurrentFetchParams({ ip_fallback: true });
       },
-      { timeout: 7000, maximumAge: 60000 } // Options for geolocation
+      { timeout: 7000, maximumAge: 60000 } 
     );
   }, []); // Empty dependency array: run once on mount
 
@@ -76,24 +74,19 @@ function App() {
     if (currentFetchParams) {
       fetchNews(currentFetchParams);
     }
-    // We don't fetch if currentFetchParams is null (e.g. before initial geo attempt completes)
   }, [currentFetchParams, fetchNews]);
 
 
-  // Handler for category selection
   const handleCategorySelect = (category) => {
     setCurrentFetchParams(prevParams => {
-      // Start with existing params (which should have geo/IP/searched_location context)
       const newParams = { ...prevParams };
       
-      // Category selection primarily affects the topic; it doesn't change the location context.
-      // If a keyword search was active, selecting a category overrides it for the topic.
       delete newParams.search_query;
 
       if (category && category.toLowerCase() !== 'all') {
         newParams.category = category;
       } else {
-        delete newParams.category; // 'All' means no specific category filter
+        delete newParams.category; 
       }
       return newParams;
     });
@@ -101,14 +94,13 @@ function App() {
 
   // Handler for keyword search (from Header)
   const handleKeywordSearch = (query) => {
-    setKeywordSearchInput(query); // Update controlled input if needed (Header might manage its own)
+    setKeywordSearchInput(query); 
     setCurrentFetchParams(prevParams => {
-      // Keyword search defines the topic. It respects existing location context (geo/IP/searched_location).
       const newParams = { ...prevParams };
-      delete newParams.category; // Keyword search overrides category for the topic.
+      delete newParams.category; 
       
       newParams.search_query = query.trim();
-      if (!newParams.search_query) delete newParams.search_query; // Remove if empty
+      if (!newParams.search_query) delete newParams.search_query; 
 
       return newParams;
     });
@@ -117,9 +109,6 @@ function App() {
   // Handler for location search (user types a location)
   const handleLocationSearchSubmit = () => {
     if (locationSearchInput.trim()) {
-      // When user explicitly searches a location, this location takes precedence.
-      // Geo/IP context from initial load is overridden by this explicit search.
-      // Keyword and category are cleared to make this a fresh location-based search.
       setCurrentFetchParams({
         searched_location: locationSearchInput.trim()
       });
@@ -129,13 +118,13 @@ function App() {
 
   return (
     <div className="container">
-      {/* Pass setKeywordSearchInput if Header needs to be fully controlled, or handleSearch directly */}
+      {}
       <Header onSearch={handleKeywordSearch} />
 
       <section className="latest-news-section">
         <h1>Latest News</h1>
         <p>Browse the latest headlines from around the world</p>
-        {/* Determine activeCategory based on currentFetchParams for UI feedback */}
+        {}
         <CategoryFilters 
             activeCategory={currentFetchParams?.category || 'All'} 
             onSelectCategory={handleCategorySelect} 

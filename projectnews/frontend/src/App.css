@@ -31,7 +31,7 @@ body {
 }
 
 .logo-icon {
-  font-size: 2rem; /* Simple text icon for now */
+  font-size: 2rem;
   margin-right: 10px;
   color: #007bff;
 }
@@ -71,31 +71,31 @@ body {
 }
 
 
-.logo-icon svg { /* If you replace text logo with SVG */
+.logo-icon svg { 
   width: 28px;
   height: 28px;
   margin-right: 8px;
-  color: #0d6efd; /* Bootstrap blue for example */
+  color: #0d6efd; 
 }
 .logo-text {
-  font-size: 1.7rem; /* Slightly smaller */
-  font-weight: 600; /* Bolder */
+  font-size: 1.7rem; 
+  font-weight: 600; 
 }
 
 .search-input {
-  border-right: none; /* For seamless button connection */
+  border-right: none; 
 }
 
 
 /* Latest News Section */
 .latest-news-section h1 {
-  font-size: 1.8rem; /* Adjusted to match image */
+  font-size: 1.8rem; 
   font-weight: 600;
   margin-bottom: 8px;
 }
 .latest-news-section p {
-  font-size: 0.95rem; /* Adjusted */
-  color: #555; /* Darker gray */
+  font-size: 0.95rem; 
+  color: #555; 
   margin-bottom: 25px;
 }
 
@@ -104,20 +104,20 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 25px; /* Space before location search */
+  margin-bottom: 25px; 
 }
 
 .category-button {
-  padding: 8px 18px; /* Adjusted padding */
+  padding: 8px 18px; 
   font-size: 0.9rem;
-  border: 1px solid #ced4da; /* Lighter border */
+  border: 1px solid #ced4da; 
   background-color: #fff;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   display: flex;
   align-items: center;
-  color: #333; /* Default text color */
+  color: #333; 
 }
 
 .category-button .icon svg { /* Styling for SVG icons in buttons */

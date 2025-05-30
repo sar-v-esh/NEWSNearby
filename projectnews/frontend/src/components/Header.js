@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-// Simple newspaper icon (you can replace with an SVG or FontAwesome icon)
 const NewspaperIcon = () => <span className="logo-icon">📰</span>;
 
 function Header({ onSearch }) {

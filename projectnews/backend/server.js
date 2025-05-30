@@ -11,12 +11,11 @@ const allowedOrigins = [
     'http://localhost:3000', // For local frontend development
     'https://news-nearby.vercel.app',
     'https://news-nearby-sar-v-eshs-projects.vercel.app',
-    'https://news-nearby-git-main-sar-v-eshs-projects.vercel.app', // EXAMPLE - REPLACE THIS LATER
+    'https://news-nearby-git-main-sar-v-eshs-projects.vercel.app', 
 ];
 
 const corsOptions = {
     origin: function (origin, callback) {
-        // Log the incoming origin and what's allowed, for every request
         console.log(`----------------------------------------------------------------`);
         console.log(`CORS CHECK - Incoming Request Origin: ${origin}`);
         console.log(`CORS CHECK - Allowed Origins: ${allowedOrigins.join(', ')}`);
@@ -26,7 +25,7 @@ const corsOptions = {
             callback(null, true);
         } else {
             console.error(`CORS CHECK - Result: Origin ${origin} NOT ALLOWED.`);
-            callback(new Error('Not allowed by CORS')); // This is what's happening
+            callback(new Error('Not allowed by CORS')); 
         }
         console.log(`----------------------------------------------------------------`);
     }
@@ -46,7 +45,7 @@ async function fetchNewsFromGoogle(query, locationParams = {}) {
         const ccUpper = countryCode.toUpperCase();
         rssUrl += `&gl=${ccUpper}&hl=${languageCode}-${ccUpper}&ceid=${ccUpper}:${languageCode}`;
     } else {
-        rssUrl += `&hl=${languageCode}`; // Default language if no specific country
+        rssUrl += `&hl=${languageCode}`; 
     }
 
     console.log("Fetching RSS from:", rssUrl);
@@ -59,7 +58,7 @@ async function fetchNewsFromGoogle(query, locationParams = {}) {
                 pubDate: item.isoDate,
                 snippet: item.contentSnippet || item.content
             }))
-            .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)) // Sort by date descending
+            .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)) 
             .slice(0, 20);
     } catch (error) {
         console.error("Error fetching or parsing RSS:", error.message, "URL:", rssUrl);
@@ -74,14 +73,13 @@ app.get('/api/news', async (req, res) => {
     let locationPhrase = null;
     let locationOptions = {}; 
 
-    const RAPIDAPI_KEY = 'process.env.RAPIDAPI_KEY'; // Store securely!
+    const RAPIDAPI_KEY = 'process.env.RAPIDAPI_KEY'; 
 
     try {
         // --- 1. Geolocation (lat/lon) ---
         if (lat && lon) {
             console.log(`Attempting reverse geocoding for lat/lon: ${lat}, ${lon}`);
             const geoApiUrl = `https://forward-reverse-geocoding.p.rapidapi.com/v1/reverse?lat=${lat}&lon=${lon}&zoom=10&addressdetails=1&accept-language=en&format=json`;
-            // ^ You might experiment with 'zoom' level (e.g., 12-15 for more detail if API supports it well)
             const geoApiOptions = {
                 method: 'GET',
                 headers: {
@@ -96,7 +94,6 @@ app.get('/api/news', async (req, res) => {
                 }
                 const geoResult = await geoResponse.json();
                 
-                // Log the full address object to see what the API returns
                 if (geoResult && geoResult.address) {
                     console.log("Full Geocoding Address Object:", JSON.stringify(geoResult.address, null, 2));
 
@@ -104,12 +101,10 @@ app.get('/api/news', async (req, res) => {
                         locationOptions.countryCode = geoResult.address.country_code.toUpperCase(); // Ensure uppercase
                     }
 
-                    // Try to get the most specific administrative area
                     const city = geoResult.address.city;
                     const town = geoResult.address.town;
                     const village = geoResult.address.village;
                     const county = geoResult.address.county;
-                    // These can vary by country; state_district is common in India, county in US/UK
                     const district = geoResult.address.state_district || geoResult.address.county || geoResult.address.suburb;
                     const state = geoResult.address.state;
                     const countryName = geoResult.address.country;
@@ -119,21 +114,19 @@ app.get('/api/news', async (req, res) => {
 
                     if (mostSpecificAdminArea && countryName) {
                         determinedLoc = `${mostSpecificAdminArea}, ${countryName}`;
-                    } else if (district && state && countryName) { // If no city/town, but district and state
+                    } else if (district && state && countryName) { 
                         determinedLoc = `${district}, ${state}, ${countryName}`;
-                    } else if (state && countryName) { // Fallback to state if no city/district
+                    } else if (state && countryName) { 
                         determinedLoc = `${state}, ${countryName}`;
-                    } else if (countryName) { // Fallback to just country
+                    } else if (countryName) { 
                         determinedLoc = countryName;
                     }
-                    // If even countryName is missing, determinedLoc will be empty.
 
                     if (determinedLoc) {
                         locationPhrase = `in ${determinedLoc}`;
                         console.log(`Geolocation successful. Determined Location for query: ${determinedLoc}, Country Code for Google News: ${locationOptions.countryCode || 'N/A'}`);
                     } else {
                         console.warn("Could not determine a specific location string from geocoding, though country code might be set.");
-                        // If only countryCode is set, Google News region will be set, but query might be broad.
                     }
                 } else {
                     console.warn("Reverse geocoding response did not contain 'address' details or was empty.");
@@ -172,8 +165,6 @@ app.get('/api/news', async (req, res) => {
         // Only if no location determined by geo/IP and searched_location is provided
         if (!locationPhrase && searched_location) {
             locationPhrase = `in ${searched_location}`;
-            // No countryCode is derived here, Google News will interpret the string.
-            // locationOptions.countryCode might remain unset or be from a previous failed geo/IP attempt (though unlikely with current logic)
             console.log(`Using user searched location: "${searched_location}"`);
         }
 
@@ -185,7 +176,6 @@ app.get('/api/news', async (req, res) => {
             baseQueryTopic = `${category} news`;
             console.log(`Topic set by category: "${category}"`);
         }
-        // If category is 'All' or not provided, and no search_query, baseQueryTopic remains "latest news"
 
         // --- Construct Final News Query ---
         let finalNewsQuery;
@@ -196,7 +186,7 @@ app.get('/api/news', async (req, res) => {
         }
         
         if (finalNewsQuery.toLowerCase() === "latest news" && Object.keys(locationOptions).length === 0 && !locationPhrase) {
-            finalNewsQuery = "world news"; // More general if absolutely no context
+            finalNewsQuery = "world news"; 
             console.log("Query was too generic, changed to 'world news'");
         }
         

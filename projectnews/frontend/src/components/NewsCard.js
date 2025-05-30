@@ -1,6 +1,5 @@
 import React from 'react';
 
-// Helper function to extract publisher name (already provided, can be refined)
 function getPublisherName(title, link) {
   if (title) {
     const parts = title.split(' - ');
@@ -21,7 +20,7 @@ function getPublisherName(title, link) {
         return mainDomain.charAt(0).toUpperCase() + mainDomain.slice(1);
       }
       return hostname;
-    } catch (e) { /* ignore */ }
+    } catch (e) {  }
   }
   return "Unknown Source";
 }
@@ -29,7 +28,6 @@ function getPublisherName(title, link) {
 function NewsCard({ article }) {
   const publisher = getPublisherName(article.title, article.link);
   let displayTitle = article.title;
-  // Attempt to remove publisher from title if it was appended with ' - '
   if (publisher !== "Unknown Source" && displayTitle.endsWith(` - ${publisher}`)) {
       displayTitle = displayTitle.substring(0, displayTitle.length - ` - ${publisher}`.length);
   }
@@ -37,16 +35,13 @@ function NewsCard({ article }) {
   const date = new Date(article.pubDate);
   const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
-  // Combine snippet with publisher as per the image style
   let fullSnippet = article.snippet || "";
   if (publisher && publisher !== "Unknown Source" && fullSnippet) {
-    // Check if snippet already ends with publisher to avoid duplication
-    // This is a simple check and might need more robust logic
     if (!fullSnippet.toLowerCase().endsWith(publisher.toLowerCase())) {
         fullSnippet += `. ${publisher}`;
     }
   } else if (publisher && publisher !== "Unknown Source" && !fullSnippet) {
-    fullSnippet = publisher; // If no snippet, just show publisher
+    fullSnippet = publisher; 
   }
 
 
@@ -61,7 +56,7 @@ function NewsCard({ article }) {
           {displayTitle}
         </a>
       </h3>
-      {/* Display the combined snippet */}
+      {}
       <p className="snippet" title={fullSnippet}> 
         {fullSnippet}
       </p>
