@@ -9,9 +9,9 @@ const port = process.env.PORT || 3001;
 const parser = new Parser();
 const allowedOrigins = [
     'http://localhost:3000', // For local frontend development
-    'https://news-nearby.vercel.app/',
-    'https://news-nearby-sar-v-eshs-projects.vercel.app/',
-    'https://news-nearby-git-main-sar-v-eshs-projects.vercel.app/', // EXAMPLE - REPLACE THIS LATER
+    'https://news-nearby.vercel.app',
+    'https://news-nearby-sar-v-eshs-projects.vercel.app',
+    'https://news-nearby-git-main-sar-v-eshs-projects.vercel.app', // EXAMPLE - REPLACE THIS LATER
 ];
 
 const corsOptions = {
